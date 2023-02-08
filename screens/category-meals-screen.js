@@ -1,14 +1,9 @@
 import React from "react";
-import {
-  StyleSheet,
-  View,
-  Text,
-  Button,
-  Platform,
-  FlatList,
-} from "react-native";
-
+import { StyleSheet, View } from "react-native";
+import { useSelector } from "react-redux";
+import DefaultText from "../components/default-text/default-text";
 import MealItem from "../components/meal-item/meal-item";
+import MealList from "../components/meal-list/meal-list";
 
 import Colors from "../constants/colors";
 import { CATEGORIES, MEALS } from "../data/dummy";
@@ -17,23 +12,13 @@ const CategoryMealScreen = ({ navigation }) => {
   const categoryId = navigation.getParam("categoryId");
   const bgColor = navigation.getParam("bgColor");
 
-  const selectedCategory = CATEGORIES.find((item) => item.id === categoryId);
+  const availableMeals = useSelector((state) => state.meals.filteredMeals);
 
-  const displayedMeals = MEALS.filter((meal) =>
+  // const selectedCategory = CATEGORIES.find((item) => item.id === categoryId);
+
+  const displayedMeals = availableMeals.filter((meal) =>
     meal.categoryIds.includes(categoryId)
   );
-
-  //console.log(displayedMeals.length, "dpM");
-
-  const renderMealItem = (itemData) => {
-    const { item } = itemData;
-
-    const handleSelectMeal = () => {
-
-    }
-
-    return <MealItem meal={item} handleSelectMeal={handleSelectMeal} bgColor={bgColor}/>;
-  };
 
   const handlePress = () => {
     navigation.navigate({
@@ -44,27 +29,16 @@ const CategoryMealScreen = ({ navigation }) => {
     navigation.goBack();
   };
 
-  return (
-    <View
-      style={{
-        ...styles.screen,
-        //  backgroundColor: bgColor
-      }}
-    >
-      {/* <Text>The Category Meal Screen!</Text>
-      <Text>{selectedCategory.title}</Text>
-      <Button title="Check details" onPress={handlePress} />
-      <View style={styles.btn}>
-        <Button title="Go Back" onPress={handleBack} />
-      </View> */}
+  if (displayedMeals.length <= 0) {
+    return (
+      <View style={styles.screen}>
+        <DefaultText>No Meals Found.Maybe check your filters?</DefaultText>
+      </View>
+    );
+  }
 
-      <FlatList
-        data={displayedMeals}
-        keyExtractor={(m) => m.id}
-        renderItem={renderMealItem}
-        style={{width:'100%',padding:8}}
-      />
-    </View>
+  return (
+    <MealList data={displayedMeals} navigation={navigation} bgColor={bgColor} />
   );
 };
 

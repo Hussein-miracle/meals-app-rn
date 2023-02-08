@@ -9,32 +9,28 @@ import {
   Platform,
   FlatList,
 } from "react-native";
-
+import { HeaderButtons, Item } from "react-navigation-header-buttons";
+import CustomHeaderButton from "../components/header-button/header-button";
 import Colors from "../constants/colors";
 import { CATEGORIES } from "../data/dummy";
 
 import CategoryGridItem from "../components/category-grid-item/category-grid-item";
 
 const CategoriesScreen = ({ navigation }) => {
-
   const renderGridItem = (itemData) => {
     const data = itemData.item;
 
     const handlePress = () => {
-
       navigation.navigate({
         routeName: "CategoryMeals",
         params: {
           categoryId: data.id,
-          bgColor:data.color,
+          bgColor: data.color,
         },
       });
-
     };
 
-    return (
-      <CategoryGridItem onSelect={handlePress} data={data}/>
-    );
+    return <CategoryGridItem onSelect={handlePress} data={data} />;
   };
 
   return (
@@ -47,8 +43,22 @@ const CategoriesScreen = ({ navigation }) => {
   );
 };
 
-CategoriesScreen.navigationOptions = {
-  headerTitle: "Meal Categories",
+CategoriesScreen.navigationOptions = (navigationData) => {
+  const {navigation} = navigationData;
+  return {
+    headerTitle: "Meal Categories",
+    headerLeft: () => {
+      const onPress = () => {
+        //console.log(navigation,'n prss');
+        navigation.toggleDrawer();
+      };
+      return (
+        <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
+          <Item iconName="menu" iconSize={22} onPress={onPress} />
+        </HeaderButtons>
+      );
+    },
+  };
 };
 
 const styles = StyleSheet.create({
@@ -67,7 +77,7 @@ const styles = StyleSheet.create({
   gridItem: {
     // height:30,
     // width:'100%',
-    height:'100%',
+    height: "100%",
     flex: 1,
     // margin: 15,
     padding: 8,

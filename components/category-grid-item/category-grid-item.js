@@ -44,14 +44,14 @@ const styles = StyleSheet.create({
     shadowRadius: 10,
 
     // shadow for Android
-    elevation: 3,
+    elevation: 5,
   },
   listItem: {
     height: 200,
     flex: 1,
     width: "50%",
     margin: 5,
-    overflow:'hidden',
+    // overflow:'hidden',
   },
   title: {
     fontFamily: "open-sans-bold",
